@@ -1,0 +1,13 @@
+.app {
+    display: flex;
+    position: relative;
+}
+
+.sidebar {
+    height: 100%;
+}
+
+.content {
+    background-color: aqua;
+    height: 100%;
+}
