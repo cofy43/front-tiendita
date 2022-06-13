@@ -25,7 +25,7 @@
 
 /* Color/shape of close button cross */
 .bm-cross {
-    background: #bdc3c7;
+    background: white;
 }
 
 /*
@@ -39,7 +39,7 @@
 
 /* General sidebar styles */
 .bm-menu {
-    background: rgb(5 23 38);
+    background: #675cb0;
     padding: 1.5em .5em 0;
     font-size: 1.15em;
 }
@@ -71,7 +71,7 @@ a{
 }
 
 a:hover {
-   color: grey;
+   color: #171a4a;
    text-decoration: underline;
 }
 .MuiListItem-root :hover {

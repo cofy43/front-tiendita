@@ -25,7 +25,7 @@ function Sidebar() {
         <NavLink to="/">
           <ListItem>
             <ListItemAvatar>
-              <Avatar sx={{ bgcolor: 'rgb(8 70 163)' }}>
+              <Avatar sx={{ bgcolor: '#9f90ea' }}>
                 <LunchDiningIcon />
               </Avatar>
             </ListItemAvatar>
@@ -36,7 +36,7 @@ function Sidebar() {
         <NavLink to="/contact">
           <ListItem>
             <ListItemAvatar>
-              <Avatar sx={{ bgcolor: 'rgb(8 70 163)' }}>
+              <Avatar sx={{ bgcolor: '#9f90ea' }}>
                 <LunchDiningIcon />
               </Avatar>
             </ListItemAvatar>
@@ -47,7 +47,7 @@ function Sidebar() {
         <NavLink to="/about">
           <ListItem>
             <ListItemAvatar>
-              <Avatar sx={{ bgcolor: 'rgb(8 70 163)' }}>
+              <Avatar sx={{ bgcolor: '#9f90ea' }}>
                 <LunchDiningIcon />
               </Avatar>
             </ListItemAvatar>
