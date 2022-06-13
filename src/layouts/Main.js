@@ -1,6 +1,6 @@
-import  { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 
-import Sidebar from '../components/sidebar/sidebar'
+import Sidebar from "../components/sidebar/sidebar";
 import Home from "../components/home/Home";
 import Contact from "../components/contact/Contact";
 import About from "../components/about/About";
@@ -13,7 +13,7 @@ function Main() {
       <HashRouter>
         <div className="sidebar">
           <Sidebar />
-        </div>
+        </div>        
         <div className="content">
           <Routes>
             <Route exact path="/" element={<Home />} />
