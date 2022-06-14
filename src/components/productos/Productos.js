@@ -44,11 +44,11 @@ function Productos() {
     createData("Doritos nacho", "Papas", 9, 14, 3),
     createData("Crema alpura 500ml", "Lacteos", 12, 17, 4),
     createData("Gancito", "Panes", 11, 15, 6),
-    createData("Coca cola 600ml", "Refrescos", 10, 16, 1),
-    createData("Platos desechables", "Desechables", 10, 12, 2),
-    createData("Doritos nacho", "Papas", 9, 14, 3),
-    createData("Crema alpura 500ml", "Lacteos", 12, 17, 4),
-    createData("Gancito", "Panes", 11, 15, 6),
+    createData("Coca cola 600ml", "Refrescos", 10, 16, 7),
+    createData("Platos desechables", "Desechables", 10, 12, 8),
+    createData("Doritos nacho", "Papas", 9, 14, 9),
+    createData("Crema alpura 500ml", "Lacteos", 12, 17, 10),
+    createData("Gancito", "Panes", 11, 15, 11),
   ];
 
   return (
@@ -56,7 +56,7 @@ function Productos() {
       <h1 className="subTitle">Productos</h1>
       <Paper sx={{ width: "100%" }}>
         <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader sx={{ minWidth: 700 }} aria-label="sticky table">
+          <Table stickyHeader sx={{ minWidth: 100 }} aria-label="sticky table">
             <TableHead>
               <TableRow>
                 <StyledTableCell>Nombre del producto</StyledTableCell>

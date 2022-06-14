@@ -25,7 +25,7 @@ function Main() {
         <div className="sidebar">
           <Sidebar />
         </div>
-        <div className="content">
+        <div className="content" style={ breakpoint ? {paddingLeft: '3rem'}: {paddingLeft: '5rem'}}>
           <nav>
             <Box sx={{ flexGrow: 1 }}>
               <Grid
