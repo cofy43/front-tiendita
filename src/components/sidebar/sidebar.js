@@ -35,7 +35,7 @@ function Sidebar() {
           </ListItem>
         </NavLink>
 
-        <NavLink to="/contact">
+        <NavLink to="/ventas">
           <ListItem>
             <ListItemAvatar>
               <Avatar sx={{ bgcolor: '#9f90ea' }}>

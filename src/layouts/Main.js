@@ -3,7 +3,7 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 
 import Sidebar from "../components/sidebar/sidebar";
 import Home from "../components/productos/Productos";
-import Contact from "../components/contact/Contact";
+import Contact from "../components/ventas/Ventas";
 import About from "../components/about/About";
 
 import Box from '@mui/material/Box';
@@ -55,7 +55,7 @@ function Main() {
           <div style={breakpoint ? {marginTop: '5rem'}: {marginTop: '1rem'}}>
             <Routes>
               <Route exact path="/" element={<Home />} />
-              <Route path="/contact" element={<Contact />} />
+              <Route path="/ventas" element={<Contact />} />
               <Route path="/about" element={<About />} />
             </Routes>
           </div>

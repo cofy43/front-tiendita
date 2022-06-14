@@ -1,7 +1,7 @@
-function Contact() {
+function Ventas() {
     return (
         <h1>Ventas</h1>
     )
 }
 
-export default Contact;
+export default Ventas;
