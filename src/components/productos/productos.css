@@ -7,10 +7,12 @@
     border-radius: 0.3rem;
     cursor: pointer;
     margin-top: 1rem;
+    margin-left: calc(5rem);
 }
 
 .upload {
     padding: 50;
+    margin-left: calc(50%-30px);
 }
 
 .preview-image-div {

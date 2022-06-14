@@ -22,10 +22,22 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
+import IconButton from '@mui/material/IconButton';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+
 
 import './productos.css';
 
@@ -34,7 +46,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  widht: '500px',
+  width: '500px',
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
@@ -48,6 +60,16 @@ function Productos() {
   const [open, setOpen] = React.useState(false);
   const [image, setImage] = React.useState(null);
   const [preview, setPreview] = React.useState(false);
+  const [product, setProduct] = React.useState({
+    name: "",
+    image: "",
+    expired: new Date(),
+    categoryId: -1,
+    price: 0.0,
+    cost: 0.0,
+    perKilo: 0.0,
+  })
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -73,6 +95,12 @@ function Productos() {
       border: 0,
     },
   }));
+
+  const handleForm = (property, value) => {
+    let newProduct = product;
+    newProduct[property] = value
+    setProduct(newProduct);
+  }
 
   function createData(name, category, cost, price, id) {
     return { name: name, category: category, cost: cost, price: price, id: id };
@@ -178,55 +206,82 @@ function Productos() {
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <Box
               component="form"
-              sx={{
-                "& .MuiTextField-root": { m: 1, width: "25ch" },
-              }}
+              sx={
+                breakpoint
+                  ? {
+                      paddingLeft: "31px",
+                      "& .MuiTextField-root": { m: 1, width: "25ch" },
+                    }
+                  : { "& .MuiTextField-root": { m: 1, width: "25ch" } }
+              }
               autoComplete="off"
             >
               <div>
-                <TextField id="outlined-error" label="Nombre" defaultValue="" />
                 <TextField
-                  id="outlined-adornment-amount"
-                  //value={values.amount}
-                  //onChange={handleChange("amount")}
-                  startAdornment={
-                    <InputAdornment position="start">$</InputAdornment>
-                  }
-                  label="Precio de proveedor"
+                  id="name"
+                  label="Nombre"
+                  onChange={(event) => handleForm("name", event.target.value)}
                 />
-              </div>
-              <div>
-                <TextField
-                  id="outlined-adornment-amount"
-                  //value={values.amount}
-                  //onChange={handleChange("amount")}
-                  startAdornment={
-                    <InputAdornment position="start">$</InputAdornment>
-                  }
-                  label="Precio de venta"
-                />
-                <Grid container>
+                <FormControl sx={{ m: 1, minWidth: 225 }}>
                   <InputLabel id="demo-simple-select-autowidth-label">
                     Categoría
                   </InputLabel>
                   <Select
-                    labelId="demo-simple-select-autowidth-label"
                     id="demo-simple-select-autowidth"
-                    //value={age}
-                    //onChange={handleChange}
-                    autoWidth
+                    value={product.categoryId}
+                    onChange={(event) =>
+                      handleForm("categoryId", event.target.value)
+                    }
                     label="Age"
                   >
-                    <MenuItem value="">
+                    <MenuItem value={-1}>
                       <em>None</em>
                     </MenuItem>
-                    <MenuItem value={10}>Refrescos</MenuItem>
-                    <MenuItem value={21}>Cremería</MenuItem>
-                    <MenuItem value={22}>Miselaneos</MenuItem>
+                    <MenuItem value={1}>Refrescos</MenuItem>
+                    <MenuItem value={2}>Cremería</MenuItem>
+                    <MenuItem value={3}>Miselaneos</MenuItem>
                   </Select>
-                </Grid>
+                </FormControl>
               </div>
               <div>
+                <TextField
+                  id="price"
+                  label="Precio de venta"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AttachMoneyIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  variant="standard"
+                  onChange={(event) => handleForm("price", event.target.value)}
+                />
+                <TextField
+                  id="cost"
+                  label="Precio de proveedor"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AttachMoneyIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  variant="standard"
+                  onChange={(event) => handleForm("cost", event.target.value)}
+                />
+              </div>
+              <div>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <MobileDatePicker
+                    label="Fecha de expiración"
+                    inputFormat="MM/dd/yyyy"
+                    value={product.expired}
+                    disablePast={true}
+                    onChange={(value) => handleForm("expired", value)}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                </LocalizationProvider>
                 <input
                   id="upload"
                   type="file"
@@ -241,7 +296,38 @@ function Productos() {
               </div>
               {preview && (
                 <div className="preview-image-div">
-                  <img src={image} alt="Preview" className="preview-image" />
+                  <ImageList
+                    sx={{
+                      width: '100%',                      
+                      // Promote the list into its own layer in Chrome. This costs memory, but helps keeping high FPS.
+                      transform: "translateZ(0)",
+                    }}
+                    rowHeight={200}
+                    gap={1}
+                  >
+                    <ImageListItem key={1} cols={2} rows={1}>
+                    <img src={image} alt="Preview" className="preview-image" />
+                      <ImageListItemBar
+                        sx={{
+                          background:
+                            "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +
+                            "rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
+                        }}
+                        title={"Vista previa"}
+                        position="top"
+                        actionIcon={
+                          <IconButton
+                            sx={{ color: "white" }}
+                            aria-label={`star Vista previa`}
+                          >
+                            <StarBorderIcon />
+                          </IconButton>
+                        }
+                        actionPosition="left"
+                      />
+                    </ImageListItem>
+                  </ImageList>
+                  
                 </div>
               )}
             </Box>
