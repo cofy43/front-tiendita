@@ -101,8 +101,12 @@ function Productos() {
     setProduct(newProduct);
   }
 
-  function createData(name, category, cost, price, id) {
-    return { name: name, category: category, cost: cost, price: price, id: id };
+  function createData(name, category, cost, price, id, addWarning = false) {
+    let obj = { name: name, category: category, cost: cost, price: price, id: id, categoryId: 1, expired: new Date() };
+    if (addWarning) {
+      obj.category = 3;
+    }
+    return obj
   }
 
   const rows = [
@@ -110,7 +114,7 @@ function Productos() {
     createData("Platos desechables", "Desechables", 10, 12, 2),
     createData("Doritos nacho", "Papas", 9, 14, 3),
     createData("Crema alpura 500ml", "Lacteos", 12, 17, 4),
-    createData("Gancito", "Panes", 11, 15, 6),
+    createData("Gancito", "Panes", 11, 15, 6, true),
     createData("Coca cola 600ml", "Refrescos", 10, 16, 7),
     createData("Platos desechables", "Desechables", 10, 12, 8),
     createData("Doritos nacho", "Papas", 9, 14, 9),
@@ -133,10 +137,15 @@ function Productos() {
     setPreview(true);
   };
 
+  function addWarning(item) {
+    let today = new Date()
+    return item.categoryId === 3 && (item.expired - today < 2);
+  }
+
   return (
     <div style={{ marginRight: "1.5rem" }}>
       <Box sx={{ "& > :not(style)": { m: 1 } }}>
-        <Grid container spacing={2} direction={"col"}>
+        <Grid container spacing={2}>
           <h1 className="subTitle">Productos</h1>
           <Fab
             size="small"
@@ -164,7 +173,7 @@ function Productos() {
             </TableHead>
             <TableBody>
               {rows.map((row) => (
-                <StyledTableRow key={row.id}>
+                <StyledTableRow key={row.id} style={addWarning(row) ? {backgroundColor: 'red'}: {}}>
                   <StyledTableCell component="th" scope="row">
                     {row.name}
                   </StyledTableCell>
@@ -184,9 +193,9 @@ function Productos() {
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
           count={rows.length}
-          //rowsPerPage={rowsPerPage}
+          rowsPerPage={10}
           page={1}
-          //onPageChange={handleChangePage}
+          onPageChange={() => {}}
           //onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
