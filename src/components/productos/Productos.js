@@ -16,12 +16,18 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import InputAdornment from '@mui/material/InputAdornment';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
 
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-
+import './productos.css';
 
 const style = {
   position: 'absolute',
@@ -36,11 +42,12 @@ const style = {
 };
 
 function Productos() {
-
   const theme = useTheme();
   const breakpoint = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [open, setOpen] = React.useState(false);
+  const [image, setImage] = React.useState(null);
+  const [preview, setPreview] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -83,6 +90,21 @@ function Productos() {
     createData("Crema alpura 500ml", "Lacteos", 12, 17, 10),
     createData("Gancito", "Panes", 11, 15, 11),
   ];
+
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const handleImageChange = async (event) => {
+    let file = event.target.files[0];
+    let base64String = await toBase64(file);
+    setImage(base64String);
+    setPreview(true);
+  };
 
   return (
     <div style={{ marginRight: "1.5rem" }}>
@@ -148,12 +170,102 @@ function Productos() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={breakpoint ? {...style, width: 'calc(75%)' }: style}>
+        <Box sx={breakpoint ? { ...style, width: "calc(75%)" } : style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Agregar un producto
           </Typography>
+          <hr />
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            <Box
+              component="form"
+              sx={{
+                "& .MuiTextField-root": { m: 1, width: "25ch" },
+              }}
+              autoComplete="off"
+            >
+              <div>
+                <TextField id="outlined-error" label="Nombre" defaultValue="" />
+                <TextField
+                  id="outlined-adornment-amount"
+                  //value={values.amount}
+                  //onChange={handleChange("amount")}
+                  startAdornment={
+                    <InputAdornment position="start">$</InputAdornment>
+                  }
+                  label="Precio de proveedor"
+                />
+              </div>
+              <div>
+                <TextField
+                  id="outlined-adornment-amount"
+                  //value={values.amount}
+                  //onChange={handleChange("amount")}
+                  startAdornment={
+                    <InputAdornment position="start">$</InputAdornment>
+                  }
+                  label="Precio de venta"
+                />
+                <Grid container>
+                  <InputLabel id="demo-simple-select-autowidth-label">
+                    Categoría
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-autowidth-label"
+                    id="demo-simple-select-autowidth"
+                    //value={age}
+                    //onChange={handleChange}
+                    autoWidth
+                    label="Age"
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={10}>Refrescos</MenuItem>
+                    <MenuItem value={21}>Cremería</MenuItem>
+                    <MenuItem value={22}>Miselaneos</MenuItem>
+                  </Select>
+                </Grid>
+              </div>
+              <div>
+                <input
+                  id="upload"
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={handleImageChange}
+                  hidden
+                />
+                <label className="labelUpload" for="upload">
+                  Tomar Foto
+                </label>
+              </div>
+              {preview && (
+                <div className="preview-image-div">
+                  <img src={image} alt="Preview" className="preview-image" />
+                </div>
+              )}
+            </Box>
+            <hr />
+            <Grid container direction="row-reverse" spacing={2}>
+              <Grid item>
+                <Button
+                  variant="outlined"
+                  color="success"
+                  onClick={() => setOpen(false)}
+                >
+                  Guardar
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={() => setOpen(false)}
+                >
+                  Cancelar
+                </Button>
+              </Grid>
+            </Grid>
           </Typography>
         </Box>
       </Modal>
