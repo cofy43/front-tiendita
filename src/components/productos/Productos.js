@@ -26,17 +26,16 @@ import FormControl from '@mui/material/FormControl';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
+import IconButton from '@mui/material/IconButton';
 
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
-import IconButton from '@mui/material/IconButton';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 
 
 import './productos.css';
@@ -320,7 +319,7 @@ function Productos() {
                             sx={{ color: "white" }}
                             aria-label={`star Vista previa`}
                           >
-                            <StarBorderIcon />
+                            <InsertPhotoIcon />
                           </IconButton>
                         }
                         actionPosition="left"
