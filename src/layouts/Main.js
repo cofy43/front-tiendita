@@ -2,7 +2,7 @@ import React from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
 
 import Sidebar from "../components/sidebar/sidebar";
-import Home from "../components/home/Home";
+import Home from "../components/productos/Productos";
 import Contact from "../components/contact/Contact";
 import About from "../components/about/About";
 
@@ -11,7 +11,7 @@ import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Grid from '@mui/material/Grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 
 import "./main.css";
 

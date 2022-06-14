@@ -11,6 +11,8 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
 
 function Sidebar() {
   return (
@@ -37,7 +39,7 @@ function Sidebar() {
           <ListItem>
             <ListItemAvatar>
               <Avatar sx={{ bgcolor: '#9f90ea' }}>
-                <LunchDiningIcon />
+                <AttachMoneyIcon />
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary="Ventas"/>
@@ -48,7 +50,7 @@ function Sidebar() {
           <ListItem>
             <ListItemAvatar>
               <Avatar sx={{ bgcolor: '#9f90ea' }}>
-                <LunchDiningIcon />
+                <AirportShuttleIcon />
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary="Proveedores"/>

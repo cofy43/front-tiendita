@@ -29,3 +29,10 @@ nav {
     font: italic bold 50px Georgia, Serif;
     text-shadow: -4px 3px 0 #84b6f4, -14px 7px 0 #fdfd96;
 }
+
+.subTitle {
+    color: #fabfb7;
+    margin: 0 auto;
+    text-align: left;
+    font: italic bold 50px Verdana;
+}
