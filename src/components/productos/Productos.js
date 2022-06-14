@@ -16,7 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 function Productos() {
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
+      backgroundColor: '#5086c1',
       color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
@@ -26,8 +26,11 @@ function Productos() {
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: '#b2dafa',
     },
+    "&:nth-of-type(even)": {
+        backgroundColor: '#dcffff',
+      },
     // hide last border
     "&:last-child td, &:last-child th": {
       border: 0,
