@@ -26,10 +26,12 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import './ventas.css';
 
-const style = { bgcolor: '#98d9c4', height: '85vh', marginTop: '4rem', width: '100%'}
+const style = {bgcolor: '#53ca98 ', height: '85vh', marginTop: '4rem', width: '100%', overflowY: 'scroll', borderRadius: '10px'}
 
 function Ventas() {
   const theme = useTheme();
@@ -45,6 +47,16 @@ function Ventas() {
   const TAX_RATE = 0.07;
 
   const listItems = [
+    {
+      name: "coca cola 600ml",
+      price: 16.0,
+      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
+    },
+    {
+      name: "coca cola 600ml",
+      price: 16.0,
+      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
+    },
     {
       name: "coca cola 600ml",
       price: 16.0,
@@ -122,6 +134,126 @@ function Ventas() {
       precio: 12.5,
       cantidad: 2,
     },
+    {
+      id: 5,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 6,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 7,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 8,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 9,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 10,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 11,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 12,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 13,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 14,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 15,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 16,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 17,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 18,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 19,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 20,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 21,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 22,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 32,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
+    {
+      id: 33,
+      nombre: "gancito",
+      precio: 12.5,
+      cantidad: 2,
+    },
   ];
 
   function ccyFormat(num) {
@@ -154,12 +286,12 @@ function Ventas() {
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: "#e28000",
-      color: theme.palette.common.white,      
-      padding: '0px',
+      color: theme.palette.common.white,
+      padding: "0px",
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
-    },    
+    },
   }));
 
   const StyledTableTitle = styled(TableCell)(({ theme }) => ({
@@ -284,6 +416,7 @@ function Ventas() {
                     container
                     direction="row"
                     className="list-products"
+                    style={breakpoint ? { marginLeft: "7px" } : {}}
                     justify="center"
                   >
                     {listItems.map((elemt) => {
@@ -298,21 +431,23 @@ function Ventas() {
                           >
                             <CardMedia
                               component="img"
-                              height="140"
-                              image={elemt.image}
-                              alt="green iguana"
+                              height="130"
+                              image={elemt.image}                              
+                              alt="green iguana"                              
                             />
-                            <CardContent>
+                            <CardContent style={{paddingTop: '0px', paddingBottom: '10px'}}>
                               <Typography
                                 gutterBottom
                                 variant="h6"
                                 component="div"
+                                align="center"
                               >
                                 {elemt.name}
                               </Typography>
+                              <hr/>
                               <Typography
                                 variant="body2"
-                                color="#1099BB"
+                                color="black"
                                 textAlign={"center"}
                               >
                                 $ {elemt.price}
@@ -324,20 +459,6 @@ function Ventas() {
                     })}
                   </Grid>
                 </div>
-                <Stack direction="row" spacing={2} className="sections-options">
-                  <Button variant="contained" className="button-option">
-                    Bebidas
-                  </Button>
-                  <Button variant="contained" className="button-option">
-                    Botana
-                  </Button>
-                  <Button variant="contained" className="button-option">
-                    Cremería
-                  </Button>
-                </Stack>
-                <Button variant="contained" color="error" className="leftInfo">
-                  Cancelar
-                </Button>
               </Grid>
               <Grid item xs={4}>
                 <div className="container" id="right-container">
@@ -345,7 +466,7 @@ function Ventas() {
                   <hr />
                   <div id="table-purchases-items">
                     <TableContainer component={Paper}>
-                      <Table size="small" aria-label="simple table">
+                      <Table size="small" stickyHeader={true} aria-label="simple table">
                         <TableHead>
                           <TableRow>
                             <StyledTableTitle>Nombre</StyledTableTitle>
@@ -353,7 +474,7 @@ function Ventas() {
                             <StyledTableTitle>Precio</StyledTableTitle>
                           </TableRow>
                         </TableHead>
-                        <TableBody>
+                        <TableBody style={{ overflowY: "scroll", maxHeight: '1rem' }}>
                           {toSale.map((row) => (
                             <TableRow
                               key={row.id}
@@ -393,17 +514,19 @@ function Ventas() {
                       </Table>
                     </TableContainer>
                   </div>
+                  <hr />
                   <div id="info-purchase">
-                    Total: <span className="leftInfo">${total}</span>
+                    <b>Total:</b> <span className="leftInfo"><b>$ {total}</b></span>
                   </div>
                 </div>
-                <Button
-                  variant="contained"
-                  color="success"
-                  style={{ margin: "0 0 0 1rem", width: "calc(100% - 35px)" }}
-                >
-                  GUARDAR
-                </Button>
+                <Stack direction="row" spacing={breakpoint ? 8 : 6} className="sections-options">
+                  <Button variant="contained" color="error" size="large" startIcon={<CancelIcon/>}>
+                    Cancelar
+                  </Button>
+                  <Button className="leftInfo" variant="contained" color="success" size="large"  startIcon={<SaveIcon />}>
+                    GUARDAR
+                  </Button>
+                </Stack>
               </Grid>
             </Grid>
           </Box>

@@ -1,5 +1,5 @@
 #left-container {
-    max-height: 450px;
+    max-height: 610px;
 }
 
 #right-container {
@@ -8,7 +8,7 @@
 }
 
 .container {
-    background-color: aliceblue;
+    background-color: #8edcb9;
     height: 100%;
     max-height: 600px;
     margin: 10px;
@@ -43,17 +43,15 @@
 }
 
 #table-purchases-items {
-    max-height: 450px;
-    height: calc(90%);
+    max-height: 430px;
+    overflow-y: scroll;
+    height: calc(94%);
 }
 
 #info-purchase {
     background-color: #dcdcdc;
-    height: 100%;    
-    margin-bottom: 10%;
     border-radius: 10px;
-    padding: 1rem 1rem 0 1rem;
-
+    padding: .8rem .7rem 0.9rem 0.7rem;
 }
 
 .leftInfo {
