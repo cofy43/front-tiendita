@@ -12,42 +12,43 @@ import TablePagination from "@mui/material/TablePagination";
 import Fab from "@mui/material/Fab";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import InputAdornment from '@mui/material/InputAdornment';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
-import IconButton from '@mui/material/IconButton';
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import InputAdornment from "@mui/material/InputAdornment";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+// import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
+import ImageListItemBar from "@mui/material/ImageListItemBar";
+import IconButton from "@mui/material/IconButton";
 
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+import NumbersIcon from "@mui/icons-material/Numbers";
 
+import { getAllProducts, createAProduct } from "../../api/productsAPI";
+import { getAllCategories } from "../../api/categoryAPI";
 
-import './productos.css';
+import "./productos.css";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '500px',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "500px",
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
@@ -59,15 +60,24 @@ function Productos() {
   const [open, setOpen] = React.useState(false);
   const [image, setImage] = React.useState(null);
   const [preview, setPreview] = React.useState(false);
+  var categories = [];
+  const [categoriesList, setCategoriesList] = React.useState([]);
+  const [products, setProducts] = React.useState([]);
   const [product, setProduct] = React.useState({
     name: "",
     image: "",
-    expired: new Date(),
-    categoryId: -1,
-    price: 0.0,
-    cost: 0.0,
-    perKilo: 0.0,
-  })
+    items: 0,
+    fk_category_id: 1,
+    purchase_cost: 0.0,
+    sales_cost: 0.0,
+  });
+
+  React.useEffect(() => {
+    async function fetchData() {      
+      await assingTableValues();
+    }
+    fetchData();
+  }, []);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -95,32 +105,33 @@ function Productos() {
     },
   }));
 
-  const handleForm = (property, value) => {
-    let newProduct = product;
-    newProduct[property] = value
-    setProduct(newProduct);
+  const handleChange = (prop) => (event) => {
+    setProduct({ ...product, [prop]: event.target.value });
+  };
+
+  function assingCategory(fk_category_id) {
+    let res = categories.find((category) => category.id === fk_category_id);    
+    return res.name
   }
 
-  function createData(name, category, cost, price, id, addWarning = false) {
-    let obj = { name: name, category: category, cost: cost, price: price, id: id, categoryId: 1, expired: new Date() };
-    if (addWarning) {
-      obj.category = 3;
+  async function getProductList() {
+    let res = await getAllProducts();
+    if (res) {
+      res.forEach(row => {
+        row.category = assingCategory(row.fk_category_id)
+      });
+      setProducts(res);
     }
-    return obj
   }
 
-  const rows = [
-    createData("Coca cola 600ml", "Refrescos", 10, 16, 1),
-    createData("Platos desechables", "Desechables", 10, 12, 2),
-    createData("Doritos nacho", "Papas", 9, 14, 3),
-    createData("Crema alpura 500ml", "Lacteos", 12, 17, 4),
-    createData("Gancito", "Panes", 11, 15, 6, true),
-    createData("Coca cola 600ml", "Refrescos", 10, 16, 7),
-    createData("Platos desechables", "Desechables", 10, 12, 8),
-    createData("Doritos nacho", "Papas", 9, 14, 9),
-    createData("Crema alpura 500ml", "Lacteos", 12, 17, 10),
-    createData("Gancito", "Panes", 11, 15, 11),
-  ];
+  async function assingTableValues() {
+    let categoriesRes = await getAllCategories();
+    if (categoriesRes) {
+      categories = categoriesRes;
+      setCategoriesList(categories);
+    }
+    getProductList();
+  }
 
   const toBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -134,12 +145,33 @@ function Productos() {
     let file = event.target.files[0];
     let base64String = await toBase64(file);
     setImage(base64String);
+    let obj = product;
+    obj.image = base64String;
+    setProduct(obj);
     setPreview(true);
   };
 
-  function addWarning(item) {
-    let today = new Date()
-    return item.categoryId === 3 && (item.expired - today < 2);
+  function validForm() {
+    let validName = product.name.length > 0;
+    let validImage = product.image.length > 0;
+    let validCategory = product.fk_category_id > 0;
+    let validCost = product.purchase_cost > 0;
+    let validPrice = product.sales_cost > 0;
+    return validName && validImage && validCategory && validCost && validPrice
+  }
+
+  async function saveNewProduct() {
+    await createAProduct(product);
+    setOpen(false);
+    setProduct({
+      name: "",
+      image: "",
+      items: 0,
+      fk_category_id: 1,
+      purchase_cost: 0.0,
+      sales_cost: 0.0,
+    });
+    getProductList()
   }
 
   return (
@@ -172,14 +204,14 @@ function Productos() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <StyledTableRow key={row.id} style={addWarning(row) ? {backgroundColor: 'red'}: {}}>
+              {products.map((row) => (
+                <StyledTableRow key={row.id}>
                   <StyledTableCell component="th" scope="row">
                     {row.name}
                   </StyledTableCell>
                   <StyledTableCell align="left">{row.category}</StyledTableCell>
-                  <StyledTableCell align="left">{row.cost}</StyledTableCell>
-                  <StyledTableCell align="left">{row.price}</StyledTableCell>
+                  <StyledTableCell align="left">{row.purchase_cost}</StyledTableCell>
+                  <StyledTableCell align="left">{row.sales_cost}</StyledTableCell>
                   <StyledTableCell align="center">
                     <EditIcon />
                     <DeleteIcon />
@@ -192,7 +224,7 @@ function Productos() {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={rows.length}
+          count={products.length}
           rowsPerPage={10}
           page={1}
           onPageChange={() => {}}
@@ -228,33 +260,30 @@ function Productos() {
                 <TextField
                   id="name"
                   label="Nombre"
-                  onChange={(event) => handleForm("name", event.target.value)}
+                  value={product.name}
+                  onChange={handleChange("name")}
                 />
-                <FormControl sx={{ m: 1, minWidth: 225 }}>
-                  <InputLabel id="demo-simple-select-autowidth-label">
-                    Categoría
-                  </InputLabel>
-                  <Select
-                    id="demo-simple-select-autowidth"
-                    value={product.categoryId}
-                    onChange={(event) =>
-                      handleForm("categoryId", event.target.value)
-                    }
-                    label="Age"
-                  >
-                    <MenuItem value={-1}>
-                      <em>None</em>
+
+                <Select
+                  id="demo-simple-select-autowidth"
+                  value={product.fk_category_id}
+                  onChange={handleChange("fk_category_id")}
+                  sx={{ m: 1, minWidth: 225 }}
+                  label="Categoria"
+                >
+                  {categoriesList.map((category, indx) => (
+                    <MenuItem key={indx} value={category.id}>
+                      {category.name}
                     </MenuItem>
-                    <MenuItem value={1}>Refrescos</MenuItem>
-                    <MenuItem value={2}>Cremería</MenuItem>
-                    <MenuItem value={3}>Miselaneos</MenuItem>
-                  </Select>
-                </FormControl>
+                  ))}
+                </Select>
               </div>
               <div>
                 <TextField
                   id="price"
+                  type="number"
                   label="Precio de venta"
+                  value={product.sales_cost}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -263,11 +292,13 @@ function Productos() {
                     ),
                   }}
                   variant="standard"
-                  onChange={(event) => handleForm("price", event.target.value)}
+                  onChange={handleChange("sales_cost")}
                 />
                 <TextField
                   id="cost"
+                  type="number"
                   label="Precio de proveedor"
+                  value={product.purchase_cost}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -276,10 +307,11 @@ function Productos() {
                     ),
                   }}
                   variant="standard"
-                  onChange={(event) => handleForm("cost", event.target.value)}
+                  onChange={handleChange("purchase_cost")}
                 />
               </div>
               <div>
+                {/*  select date
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <MobileDatePicker
                     label="Fecha de expiración"
@@ -289,7 +321,22 @@ function Productos() {
                     onChange={(value) => handleForm("expired", value)}
                     renderInput={(params) => <TextField {...params} />}
                   />
-                </LocalizationProvider>
+                </LocalizationProvider> */}
+                <TextField
+                  id="items"
+                  type={"number"}
+                  value={product.items}
+                  label="En el inventario"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <NumbersIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  variant="standard"
+                  onChange={handleChange("items")}
+                />
                 <input
                   id="upload"
                   type="file"
@@ -306,7 +353,7 @@ function Productos() {
                 <div className="preview-image-div">
                   <ImageList
                     sx={{
-                      width: '100%',                      
+                      width: "100%",
                       // Promote the list into its own layer in Chrome. This costs memory, but helps keeping high FPS.
                       transform: "translateZ(0)",
                     }}
@@ -314,7 +361,11 @@ function Productos() {
                     gap={1}
                   >
                     <ImageListItem key={1} cols={2} rows={1}>
-                    <img src={image} alt="Preview" className="preview-image" />
+                      <img
+                        src={image}
+                        alt="Preview"
+                        className="preview-image"
+                      />
                       <ImageListItemBar
                         sx={{
                           background:
@@ -335,7 +386,6 @@ function Productos() {
                       />
                     </ImageListItem>
                   </ImageList>
-                  
                 </div>
               )}
             </Box>
@@ -345,7 +395,8 @@ function Productos() {
                 <Button
                   variant="outlined"
                   color="success"
-                  onClick={() => setOpen(false)}
+                  onClick={() => saveNewProduct()}
+                  disabled={!validForm()}
                 >
                   Guardar
                 </Button>
@@ -354,7 +405,7 @@ function Productos() {
                 <Button
                   variant="outlined"
                   color="error"
-                  onClick={() => setOpen(false)}
+                  onClick={handleClose}
                 >
                   Cancelar
                 </Button>
