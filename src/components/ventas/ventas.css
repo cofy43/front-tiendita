@@ -1,0 +1,72 @@
+#left-container {
+    max-height: 450px;
+}
+
+#right-container {
+    max-height: 555px;
+    background-color: white;
+}
+
+.container {
+    background-color: aliceblue;
+    height: 100%;
+    max-height: 600px;
+    margin: 10px;
+    padding-left: 10px;
+    padding: .2rem;
+    min-height: 310px;
+    overflow-y: scroll;
+    overflow-y: scroll;
+    border-radius: 10px;
+    box-shadow: 0 16px 70px -12.125px rgba(0,0,0,0.3)
+}
+
+.list-products {
+    overflow-x: scroll;
+    overflow-y: scroll;
+    width: 100%;
+}
+
+#title {
+    text-align: center;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.cell-content {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.icon {
+    cursor: pointer;
+}
+
+#table-purchases-items {
+    max-height: 450px;
+    height: calc(90%);
+}
+
+#info-purchase {
+    background-color: #dcdcdc;
+    height: 100%;    
+    margin-bottom: 10%;
+    border-radius: 10px;
+    padding: 1rem 1rem 0 1rem;
+
+}
+
+.leftInfo {
+    float: right;
+    margin-right: .7rem;
+}
+
+.sections-options {
+    margin-left: .7rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.button-option {
+    height: 5rem;
+}
