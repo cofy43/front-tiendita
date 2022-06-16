@@ -36,10 +36,17 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import NumbersIcon from "@mui/icons-material/Numbers";
 
-import { getAllProducts, createAProduct } from "../../api/productsAPI";
+import {
+  getAllProducts,
+  createAProduct,
+  deleteProduct,
+  updateProduct,
+} from "../../api/productsAPI";
 import { getAllCategories } from "../../api/categoryAPI";
 
 import "./productos.css";
+
+import SweetAlert2 from "../../utils/sweetAlert/sweetAlertUtils";
 
 const style = {
   position: "absolute",
@@ -58,6 +65,8 @@ function Productos() {
   const breakpoint = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [open, setOpen] = React.useState(false);
+  const [isEdited, setIsEdited] = React.useState(false);
+  const [idEdited, setIdEdited] = React.useState(-1);
   const [image, setImage] = React.useState(null);
   const [preview, setPreview] = React.useState(false);
   var categories = [];
@@ -73,11 +82,14 @@ function Productos() {
   });
 
   React.useEffect(() => {
-    async function fetchData() {      
+    async function fetchData() {
       await assingTableValues();
     }
     fetchData();
+  // eslint-disable-next-line
   }, []);
+
+  const sweetAlert2 = new SweetAlert2();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -110,15 +122,15 @@ function Productos() {
   };
 
   function assingCategory(fk_category_id) {
-    let res = categories.find((category) => category.id === fk_category_id);    
-    return res.name
+    let res = categories.find((category) => category.id === fk_category_id);
+    return res.name;
   }
 
   async function getProductList() {
     let res = await getAllProducts();
     if (res) {
-      res.forEach(row => {
-        row.category = assingCategory(row.fk_category_id)
+      res.forEach((row) => {
+        row.category = assingCategory(row.fk_category_id);
       });
       setProducts(res);
     }
@@ -157,12 +169,10 @@ function Productos() {
     let validCategory = product.fk_category_id > 0;
     let validCost = product.purchase_cost > 0;
     let validPrice = product.sales_cost > 0;
-    return validName && validImage && validCategory && validCost && validPrice
+    return validName && validImage && validCategory && validCost && validPrice;
   }
 
-  async function saveNewProduct() {
-    await createAProduct(product);
-    setOpen(false);
+  function _resetProductObj() {
     setProduct({
       name: "",
       image: "",
@@ -171,7 +181,81 @@ function Productos() {
       purchase_cost: 0.0,
       sales_cost: 0.0,
     });
-    getProductList()
+    setIdEdited(false);
+    setIdEdited(-1);
+    setImage();
+    setPreview(false);
+    setImage(null);
+  }
+
+  async function saveNewProduct() {
+    let res = await createAProduct(product);
+    if (res) {
+      setOpen(false);
+      _resetProductObj();
+      sweetAlert2
+        .successModal(
+          "Guardado",
+          "Se ha almacenado de maneta correcta el producto"
+        )
+        .then((res) => {
+          getProductList();
+          isEdited(false);
+        });
+    }
+  }
+
+  async function deleteProductConfirm(id) {
+    let deleted = await deleteProduct(id);
+    if (deleted) {
+      sweetAlert2
+        .successModal("Eliminado", "El producto ha sido eliminado")
+        .then((res) => getProductList());
+    } else {
+      sweetAlert2.errorModal(
+        "Ocurrio un error al intentar eliminar el producto seleccionado"
+      );
+    }
+  }
+
+  function askDeleteProduct(id) {
+    sweetAlert2
+      .askModal(
+        "Si eliminas el producto en los tickets de venta podrían haber inconsistencias",
+        "Borrar"
+      )
+      .then((result) => {
+        if (result.isConfirmed) {
+          return deleteProductConfirm(id);
+        }
+      });
+  }
+
+  function editProduct(item) {
+    let copyItem = item;
+    setIdEdited(copyItem.id);
+    delete copyItem.category;
+    setProduct(copyItem);
+    setImage(copyItem.image);
+    setPreview(true);
+    setIsEdited(true);
+    setOpen(true);
+  }
+
+  async function saveEdition() {
+    let obj = product;
+    obj.id = idEdited;
+    let res = await updateProduct(obj);
+    if (res) {
+      setOpen(false);
+      _resetProductObj();
+      sweetAlert2
+        .successModal(
+          "Editado",
+          "Se almacenaron correctamente los cambios del producto"
+        )
+        .then((res) => getProductList());
+    }
   }
 
   return (
@@ -210,11 +294,15 @@ function Productos() {
                     {row.name}
                   </StyledTableCell>
                   <StyledTableCell align="left">{row.category}</StyledTableCell>
-                  <StyledTableCell align="left">{row.purchase_cost}</StyledTableCell>
-                  <StyledTableCell align="left">{row.sales_cost}</StyledTableCell>
+                  <StyledTableCell align="left">
+                    {row.purchase_cost}
+                  </StyledTableCell>
+                  <StyledTableCell align="left">
+                    {row.sales_cost}
+                  </StyledTableCell>
                   <StyledTableCell align="center">
-                    <EditIcon />
-                    <DeleteIcon />
+                    <EditIcon onClick={() => editProduct(row)}/>
+                    <DeleteIcon onClick={() => askDeleteProduct(row.id)} />
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
@@ -395,18 +483,14 @@ function Productos() {
                 <Button
                   variant="outlined"
                   color="success"
-                  onClick={() => saveNewProduct()}
+                  onClick={() => isEdited ? saveEdition() : saveNewProduct()}
                   disabled={!validForm()}
                 >
                   Guardar
                 </Button>
               </Grid>
               <Grid item>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={handleClose}
-                >
+                <Button variant="outlined" color="error" onClick={handleClose}>
                   Cancelar
                 </Button>
               </Grid>
