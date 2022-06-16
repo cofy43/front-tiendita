@@ -41,6 +41,7 @@ import {
   createAProduct,
   deleteProduct,
   updateProduct,
+  findProduct,
 } from "../../api/productsAPI";
 import { getAllCategories } from "../../api/categoryAPI";
 
@@ -66,7 +67,6 @@ function Productos() {
 
   const [open, setOpen] = React.useState(false);
   const [isEdited, setIsEdited] = React.useState(false);
-  const [idEdited, setIdEdited] = React.useState(-1);
   const [image, setImage] = React.useState(null);
   const [preview, setPreview] = React.useState(false);
   var categories = [];
@@ -83,11 +83,11 @@ function Productos() {
 
   React.useEffect(() => {
     async function fetchData() {
-      await assingTableValues();
+      if (!products.left) await assingTableValues();
     }
     fetchData();
   // eslint-disable-next-line
-  }, []);
+  }, [isEdited]);
 
   const sweetAlert2 = new SweetAlert2();
 
@@ -131,7 +131,7 @@ function Productos() {
 
   async function getProductList() {
     let res = await getAllProducts();
-    if (res) {
+    if (res) {      
       res.forEach((row) => {
         row.category = assingCategory(row.fk_category_id);
       });
@@ -184,8 +184,7 @@ function Productos() {
       purchase_cost: 0.0,
       sales_cost: 0.0,
     });
-    setIdEdited(false);
-    setIdEdited(-1);
+    setIsEdited(false);    
     setImage();
     setPreview(false);
     setImage(null);
@@ -234,30 +233,41 @@ function Productos() {
       });
   }
 
-  function editProduct(item) {
-    let copyItem = item;
-    setIdEdited(copyItem.id);
-    delete copyItem.category;
-    setProduct(copyItem);
-    setImage(copyItem.image);
-    setPreview(true);
-    setIsEdited(true);
-    setOpen(true);
+  async function editProduct(item) {
+    let res = await findProduct(item.id);
+    if (res) {
+      setProduct(res);
+      setIsEdited(true);
+      setImage(res.image);
+      setPreview(true);
+      setOpen(true);
+    } else {
+      sweetAlert2.errorModal(
+        "Ocurrio un problema al intentar traer la información del producto <b>" +
+          item.nam +
+          "</b>"
+      );
+    }
+
+    // delete copyItem.category;
+    // setProduct(copyItem);
+    // setImage(copyItem.image);
+    // setPreview(true);
+    // setIsEdited(true);
+    // setOpen(true);
   }
 
   async function saveEdition() {
     let obj = product;
-    obj.id = idEdited;
     let res = await updateProduct(obj);
-    if (res) {
+    if (res) {      
       setOpen(false);
       _resetProductObj();
       sweetAlert2
         .successModal(
           "Editado",
           "Se almacenaron correctamente los cambios del producto"
-        )
-        .then((res) => getProductList());
+        );        
     }
   }
 

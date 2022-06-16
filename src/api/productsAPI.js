@@ -66,3 +66,19 @@ export async function updateProduct(product) {
     });
     return res;
 }
+
+export async function findProduct(id) {
+    let res;
+    let config = {
+        method: 'get',
+        url: `${env.REACT_BASE_URL}/product/one/${id}`,
+    }
+    await axios(config)
+    .then(function (response) {
+        res = response.data;
+    })
+    .catch(function err() {
+        res = false;
+    });
+    return res;
+}
