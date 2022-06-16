@@ -92,7 +92,10 @@ function Productos() {
   const sweetAlert2 = new SweetAlert2();
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    _resetProductObj();
+    setOpen(false)
+  };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
