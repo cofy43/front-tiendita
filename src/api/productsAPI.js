@@ -17,6 +17,22 @@ export async function getAllProducts() {
     return result;
 }
 
+export async function getAllProductsI() {
+    let result;
+    let config = {
+        method: 'get',
+        url: `${env.REACT_BASE_URL}/product/all-images`,
+    }    
+    await axios(config)
+    .then(function (response) {
+        result = response.data;
+    })
+    .catch(function (error) {
+        result= false;
+    });
+    return result;
+}
+
 export async function createAProduct(product) {
     let result;
     let config = {

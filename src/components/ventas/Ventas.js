@@ -29,232 +29,52 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 
+import { getAllProductsI } from "../../api/productsAPI";
+import { getAllSales, createASale } from "../../api/saleAPI";
+
 import './ventas.css';
+
+import SweetAlert2 from "../../utils/sweetAlert/sweetAlertUtils";
+import moment from 'moment';
 
 const style = {bgcolor: '#53ca98 ', height: '85vh', marginTop: '4rem', width: '100%', overflowY: 'scroll', borderRadius: '10px'}
 
 function Ventas() {
+  const sweetAlert2 = new SweetAlert2();
   const theme = useTheme();
   const breakpoint = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [refreshTable, setRefreshTable] = React.useState(false);
   // eslint-disable-next-line
-  const [total, setTotal] = React.useState(16.7);
-  // eslint-disable-next-line
+  const [salesList, setSalesList] = React.useState([]);
+  const [toSaleList, setToSaleList] = React.useState([]);
+  const [productList, setProductList] = React.useState([]);
+  const [total, setTotal] = React.useState(0);
+
+  const handleClose = () => {
+    setProductList([]);
+    setToSaleList([]);
+    setTotal(0);
+    setOpen(false);
+  };
   //const [cambio, setCambio] = React.useState(12);
   const TAX_RATE = 0.07;
 
-  const listItems = [
-    {
-      name: "coca cola 600ml",
-      price: 16.0,
-      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
-    },
-    {
-      name: "coca cola 600ml",
-      price: 16.0,
-      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
-    },
-    {
-      name: "coca cola 600ml",
-      price: 16.0,
-      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
-    },
-    {
-      name: "coca cola 600ml",
-      price: 16.0,
-      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
-    },
-    {
-      name: "coca cola 600ml",
-      price: 16.0,
-      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
-    },
-    {
-      name: "coca cola 600ml",
-      price: 16.0,
-      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
-    },
-    {
-      name: "coca cola 600ml",
-      price: 16.0,
-      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
-    },
-    {
-      name: "coca cola 600ml",
-      price: 16.0,
-      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
-    },
-    {
-      name: "coca cola 600ml",
-      price: 16.0,
-      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
-    },
-    {
-      name: "coca cola 600ml",
-      price: 16.0,
-      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
-    },
-    {
-      name: "coca cola 600ml",
-      price: 16.0,
-      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
-    },
-    {
-      name: "coca cola 600ml",
-      price: 16.0,
-      image: "https://coca-colafemsa.com/wp-content/uploads/2019/11/2.png",
-    },
-  ];
-
-  let toSale = [
-    {
-      id: 1,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 2,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 3,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 4,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 5,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 6,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 7,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 8,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 9,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 10,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 11,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 12,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 13,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 14,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 15,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 16,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 17,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 18,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 19,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 20,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 21,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 22,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 32,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-    {
-      id: 33,
-      nombre: "gancito",
-      precio: 12.5,
-      cantidad: 2,
-    },
-  ];
+  React.useEffect(() => {
+    async function fetchData() {
+      let res = await getAllSales();
+      if (res) {
+        setSalesList(res);
+      } else {
+        sweetAlert2.errorModal(
+          "Ocurrio un error al traer el listado de ventas"
+        );
+      }
+    }
+    fetchData();
+    // eslint-disable-next-line
+  }, [refreshTable]);
 
   function ccyFormat(num) {
     return `${num.toFixed(2)}`;
@@ -317,6 +137,117 @@ function Ventas() {
     },
   }));
 
+  async function getProducts() {
+    let res = await getAllProductsI();
+    if (res) {
+      setProductList(res);
+      setOpen(true);
+    } else {
+      sweetAlert2.errorModal(
+        "Ocurrio un error al intentar traer todos los productos"
+      );
+    }
+  }
+
+  function getTemplate(obj) {
+    return {
+      id: obj.id,
+      name: obj.name,
+      items: 1,
+      price: obj.sales_cost,
+    };
+  }
+
+  function addProducto2Sale(item) {
+    let previusAdded = toSaleList.find((elemet) => elemet.id === item.id);
+    if (previusAdded) {
+      sweetAlert2.errorModal(
+        "Ya se agregó previamente el articulo: " + item.name
+      );
+    } else {
+      let newItem = getTemplate(item);
+      let tempTotal = total;
+      tempTotal += parseFloat(newItem.price);
+      setTotal(tempTotal);
+      setToSaleList((allItems) => [...allItems, newItem]);
+    }
+  }
+
+  function removeProduct2Sale(id) {
+    let newItemList = toSaleList.filter((elemet) => elemet.id !== id);
+    assingTotal(newItemList);
+    setToSaleList(newItemList);
+  }
+
+  const handleClick = (item) => (e) => {
+    if (e.detail === 2) {
+      console.log("double click");
+      addProducto2Sale(item);
+    }
+  };
+
+  function incrementProduct(id) {
+    let tempList = toSaleList;
+    tempList = tempList.map((element) => {
+      if (element.id === id) {
+        element.items += 1;
+      }
+      return element;
+    });
+    setToSaleList(tempList);
+    assingTotal(tempList);
+  }
+
+  function decrementProduct(id) {
+    let tempList = toSaleList;
+    let removeItem = false;
+    tempList = tempList.map((element) => {
+      if (element.id === id) {
+        if (element.items - 1 > 0) {
+          element.items -= 1;
+        } else {
+          removeItem = true;
+        }
+      }
+      return element;
+    });
+    if (removeItem) {
+      tempList = tempList.filter((element) => element.id !== id);
+    }
+    assingTotal(tempList);
+    setToSaleList(tempList);
+  }
+
+  function assingTotal(list = []) {
+    let count = 0;
+    list.forEach((elemet) => (count += elemet.price * elemet.items));
+    setTotal(count);
+  }
+
+  async function saveSale() {
+    let newSale = {
+      date: moment().locale("es").format(),
+      total: total,
+      products: JSON.stringify(toSaleList),
+    };
+    let res = await createASale(newSale);
+    if (res) {
+      sweetAlert2.successModal(
+        "Guardado",
+        "La venta ha sido registrada con exito"
+      );
+      setToSaleList([]);
+      setTotal(0);
+      setProductList([]);
+      setOpen(false);
+      setRefreshTable(true);    
+    } else {
+      sweetAlert2.errorModal(
+        "Ha ocurrido un error al momento de intentar guardar el registro de la venta"
+      );
+    }
+  }
+
   return (
     <div style={{ marginRight: "1.5rem" }}>
       <Box sx={{ "& > :not(style)": { m: 1 } }}>
@@ -327,7 +258,7 @@ function Ventas() {
             aria-label="add"
             style={{ marginRight: "calc(30px)" }}
             color="warning"
-            onClick={handleOpen}
+            onClick={() => getProducts()}
           >
             <AddIcon />
           </Fab>
@@ -399,6 +330,7 @@ function Ventas() {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        style={{ zIndex: "6" }}
       >
         <Container>
           <Box sx={style}>
@@ -419,23 +351,29 @@ function Ventas() {
                     style={breakpoint ? { marginLeft: "7px" } : {}}
                     justify="center"
                   >
-                    {listItems.map((elemt) => {
+                    {productList.map((elemt) => {
                       return (
                         <Grid item>
                           <Card
                             sx={
                               breakpoint
-                                ? { maxWidth: 145, margin: 1.5 }
-                                : { maxWidth: 145, margin: 2 }
+                                ? { height: "90%", maxWidth: 145, margin: 1.5 }
+                                : { height: "90%", maxWidth: 145, margin: 2 }
                             }
+                            onClick={handleClick(elemt)}
                           >
                             <CardMedia
                               component="img"
                               height="130"
-                              image={elemt.image}                              
-                              alt="green iguana"                              
+                              image={elemt.image}
+                              alt="green iguana"
                             />
-                            <CardContent style={{paddingTop: '0px', paddingBottom: '10px'}}>
+                            <CardContent
+                              style={{
+                                paddingTop: "0px",
+                                paddingBottom: "10px",
+                              }}
+                            >
                               <Typography
                                 gutterBottom
                                 variant="h6"
@@ -444,13 +382,13 @@ function Ventas() {
                               >
                                 {elemt.name}
                               </Typography>
-                              <hr/>
+                              <hr />
                               <Typography
                                 variant="body2"
                                 color="black"
                                 textAlign={"center"}
                               >
-                                $ {elemt.price}
+                                $ {elemt.sales_cost}
                               </Typography>
                             </CardContent>
                           </Card>
@@ -466,7 +404,11 @@ function Ventas() {
                   <hr />
                   <div id="table-purchases-items">
                     <TableContainer component={Paper}>
-                      <Table size="small" stickyHeader={true} aria-label="simple table">
+                      <Table
+                        size="small"
+                        stickyHeader={true}
+                        aria-label="simple table"
+                      >
                         <TableHead>
                           <TableRow>
                             <StyledTableTitle>Nombre</StyledTableTitle>
@@ -474,8 +416,10 @@ function Ventas() {
                             <StyledTableTitle>Precio</StyledTableTitle>
                           </TableRow>
                         </TableHead>
-                        <TableBody style={{ overflowY: "scroll", maxHeight: '1rem' }}>
-                          {toSale.map((row) => (
+                        <TableBody
+                          style={{ overflowY: "scroll", maxHeight: "1rem" }}
+                        >
+                          {toSaleList.map((row) => (
                             <TableRow
                               key={row.id}
                               sx={{
@@ -486,8 +430,12 @@ function Ventas() {
                             >
                               <TableCell align="left">
                                 <div className="cell-content">
-                                  <DeleteIcon color="error" className="icon" />
-                                  {row.nombre}
+                                  <DeleteIcon
+                                    color="error"
+                                    className="icon"
+                                    onClick={() => removeProduct2Sale(row.id)}
+                                  />
+                                  {row.name}
                                 </div>
                               </TableCell>
                               <TableCell align="left">
@@ -495,18 +443,20 @@ function Ventas() {
                                   <RemoveCircleOutlineIcon
                                     color="error"
                                     className="icon"
+                                    onClick={() => decrementProduct(row.id)}
                                   />
                                   <span style={{ margin: "0 7px 0 7px" }}>
-                                    {row.cantidad}
+                                    {row.items}
                                   </span>
                                   <AddCircleOutlineIcon
                                     color="success"
                                     className="icon"
+                                    onClick={() => incrementProduct(row.id)}
                                   />
                                 </div>
                               </TableCell>
                               <TableCell align="left">
-                                <b>$ {row.precio}</b>
+                                <b>$ {row.price}</b>
                               </TableCell>
                             </TableRow>
                           ))}
@@ -516,14 +466,35 @@ function Ventas() {
                   </div>
                   <hr />
                   <div id="info-purchase">
-                    <b>Total:</b> <span className="leftInfo"><b>$ {total}</b></span>
+                    <b>Total:</b>{" "}
+                    <span className="leftInfo">
+                      <b>$ {total}</b>
+                    </span>
                   </div>
                 </div>
-                <Stack direction="row" spacing={breakpoint ? 8 : 6} className="sections-options">
-                  <Button variant="contained" color="error" size="large" startIcon={<CancelIcon/>}>
+                <Stack
+                  direction="row"
+                  spacing={breakpoint ? 8 : 6}
+                  className="sections-options"
+                >
+                  <Button
+                    variant="contained"
+                    color="error"
+                    size="large"
+                    startIcon={<CancelIcon />}
+                    onClick={handleClose}
+                  >
                     Cancelar
                   </Button>
-                  <Button className="leftInfo" variant="contained" color="success" size="large"  startIcon={<SaveIcon />}>
+                  <Button
+                    disabled={!total}
+                    className="leftInfo"
+                    variant="contained"
+                    color="success"
+                    size="large"
+                    startIcon={<SaveIcon />}
+                    onClick={() => saveSale()}
+                  >
                     GUARDAR
                   </Button>
                 </Stack>

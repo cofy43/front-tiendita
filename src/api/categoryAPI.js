@@ -12,7 +12,7 @@ export async function getAllCategories() {
         result = response.data;
     })
     .catch(function (error) {
-        result= error;
+        result= false;
     });
     return result;
 }
