@@ -286,15 +286,17 @@ function Ventas() {
       <Box sx={{ "& > :not(style)": { m: 1 } }}>
         <Grid container spacing={2}>
           <h1 className="subTitle">Ventas</h1>
-          <Fab
-            size="small"
-            aria-label="add"
-            style={{ marginRight: "calc(30px)" }}
-            color="warning"
-            onClick={() => getProducts()}
-          >
-            <AddIcon />
-          </Fab>
+          {!open && (
+            <Fab
+              size="small"
+              aria-label="add"
+              style={{ marginRight: "calc(30px)" }}
+              color="warning"
+              onClick={() => getProducts()}
+            >
+              <AddIcon />
+            </Fab>
+          )}
         </Grid>
       </Box>
 
