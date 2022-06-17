@@ -10,34 +10,48 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Fab from "@mui/material/Fab";
-import Modal from '@mui/material/Modal';
-import Container from '@mui/material/Container';
+import Modal from "@mui/material/Modal";
+import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 
 import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Cancel";
+import InfoIcon from "@mui/icons-material/Info";
+import EditIcon from "@mui/icons-material/Edit";
 
 import { getAllProductsI } from "../../api/productsAPI";
-import { getAllSales, createASale } from "../../api/saleAPI";
+import {
+  getAllSales,
+  createASale,
+  findOne,
+  updateSale,
+} from "../../api/saleAPI";
 
-import './ventas.css';
+import "./ventas.css";
 
 import SweetAlert2 from "../../utils/sweetAlert/sweetAlertUtils";
-import moment from 'moment';
+const moment = require("moment-timezone");
 
-const style = {bgcolor: '#53ca98 ', height: '85vh', marginTop: '4rem', width: '100%', overflowY: 'scroll', borderRadius: '10px'}
+const style = {
+  bgcolor: "#53ca98 ",
+  height: "85vh",
+  marginTop: "4rem",
+  width: "100%",
+  overflowY: "scroll",
+  borderRadius: "10px",
+};
 
 function Ventas() {
   const sweetAlert2 = new SweetAlert2();
@@ -45,26 +59,26 @@ function Ventas() {
   const breakpoint = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [open, setOpen] = React.useState(false);
-  const [refreshTable, setRefreshTable] = React.useState(false);
-  // eslint-disable-next-line
+  const [edit, setEdit] = React.useState(false);
+  const [editedSaleId, setEditedSaleId] = React.useState(-1);
   const [salesList, setSalesList] = React.useState([]);
   const [toSaleList, setToSaleList] = React.useState([]);
   const [productList, setProductList] = React.useState([]);
   const [total, setTotal] = React.useState(0);
 
   const handleClose = () => {
-    setProductList([]);
-    setToSaleList([]);
-    setTotal(0);
-    setOpen(false);
+    resetModalData();
   };
   //const [cambio, setCambio] = React.useState(12);
-  const TAX_RATE = 0.07;
 
   React.useEffect(() => {
     async function fetchData() {
       let res = await getAllSales();
       if (res) {
+        res = res.map((sale) => {
+          sale.date = formatDate(sale.date);
+          return sale;
+        });
         setSalesList(res);
       } else {
         sweetAlert2.errorModal(
@@ -74,34 +88,7 @@ function Ventas() {
     }
     fetchData();
     // eslint-disable-next-line
-  }, [refreshTable]);
-
-  function ccyFormat(num) {
-    return `${num.toFixed(2)}`;
-  }
-
-  function priceRow(qty, unit) {
-    return qty * unit;
-  }
-
-  function createRow(desc, qty, unit) {
-    const price = priceRow(qty, unit);
-    return { desc, qty, unit, price };
-  }
-
-  function subtotal(items) {
-    return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
-  }
-
-  const rows = [
-    createRow("Paperclips (Box)", 100, 1.15),
-    createRow("Paper (Case)", 10, 45.99),
-    createRow("Waste Basket", 2, 17.99),
-  ];
-
-  const invoiceSubtotal = subtotal(rows);
-  const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-  const invoiceTotal = invoiceTaxes + invoiceSubtotal;
+  }, [editedSaleId]);
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -136,6 +123,21 @@ function Ventas() {
       border: 0,
     },
   }));
+
+  async function editSale(id) {
+    let res = await findOne(id);
+    if (res) {
+      setEditedSaleId(res.id);
+      setToSaleList(JSON.parse(res.products));
+      setTotal(res.total);
+      setEdit(true);
+      getProducts();
+    } else {
+      sweetAlert2.errorModal(
+        "Ocurrio al traer la información de la venta:" + id
+      );
+    }
+  }
 
   async function getProducts() {
     let res = await getAllProductsI();
@@ -224,28 +226,59 @@ function Ventas() {
     setTotal(count);
   }
 
+  async function saveEditedSale(editedSale) {
+    console.log(editedSale);
+    editedSale.id = editedSaleId;
+    let res = await updateSale(editedSale);
+    if (res === 200) {
+      resetModalData();
+      sweetAlert2.successModal(
+        "Actualizado",
+        "El registro de venta: " +
+          editedSale.id +
+          " ha sido guardado exitosamente"
+      );
+    } else {
+      sweetAlert2.errorModal(
+        "Ha ocurrido un error al intentar actualizar el registro de venta: " +
+          editedSale.id
+      );
+    }
+  }
+
+  function resetModalData() {
+    setToSaleList([]);
+    setTotal(0);
+    setProductList([]);
+    setOpen(false);
+  }
+
   async function saveSale() {
     let newSale = {
       date: moment().locale("es").format(),
       total: total,
       products: JSON.stringify(toSaleList),
     };
-    let res = await createASale(newSale);
-    if (res) {
-      sweetAlert2.successModal(
-        "Guardado",
-        "La venta ha sido registrada con exito"
-      );
-      setToSaleList([]);
-      setTotal(0);
-      setProductList([]);
-      setOpen(false);
-      setRefreshTable(true);    
+    if (edit) {
+      saveEditedSale(newSale);
     } else {
-      sweetAlert2.errorModal(
-        "Ha ocurrido un error al momento de intentar guardar el registro de la venta"
-      );
+      let res = await createASale(newSale);
+      if (res) {
+        resetModalData();
+        sweetAlert2.successModal(
+          "Guardado",
+          "La venta ha sido registrada con exito"
+        );
+      } else {
+        sweetAlert2.errorModal(
+          "Ha ocurrido un error al momento de intentar guardar el registro de la venta"
+        );
+      }
     }
+  }
+
+  function formatDate(mometString) {
+    return moment(mometString).format("DD-MMMM-YYYY hh:mm");
   }
 
   return (
@@ -274,31 +307,33 @@ function Ventas() {
           >
             <TableHead>
               <TableRow>
-                <StyledTableCell align="center" colSpan={3}>
-                  Details
-                </StyledTableCell>
-                <StyledTableCell align="right">Price</StyledTableCell>
-              </TableRow>
-              <TableRow>
-                <StyledTableCell>Desc</StyledTableCell>
-                <StyledTableCell align="right">Qty.</StyledTableCell>
-                <StyledTableCell align="right">Unit</StyledTableCell>
-                <StyledTableCell align="right">Sum</StyledTableCell>
+                <StyledTableCell align="center">Venta</StyledTableCell>
+                <StyledTableCell align="center">Fecha</StyledTableCell>
+                <StyledTableCell align="center">Monto</StyledTableCell>
+                <StyledTableCell align="center">Acciones</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <StyledTableRow key={row.desc}>
-                  <StyledTableCell>{row.desc}</StyledTableCell>
-                  <StyledTableCell align="right">{row.qty}</StyledTableCell>
-                  <StyledTableCell align="right">{row.unit}</StyledTableCell>
-                  <StyledTableCell align="right">
-                    {ccyFormat(row.price)}
+              {salesList.map((row, indx) => (
+                <StyledTableRow key={indx}>
+                  <StyledTableCell align="center">
+                    {"Id de venta:" + row.id}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">{row.date}</StyledTableCell>
+                  <StyledTableCell align="center">
+                    $ {row.total}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    <InfoIcon className="icon" />
+                    <EditIcon
+                      className="icon"
+                      onClick={() => editSale(row.id)}
+                    />
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
 
-              <StyledTableRow>
+              {/* <StyledTableRow>
                 <StyledTableCell rowSpan={3} />
                 <StyledTableCell colSpan={2}>Subtotal</StyledTableCell>
                 <StyledTableCell align="right">
@@ -319,7 +354,7 @@ function Ventas() {
                 <StyledTableCell align="right">
                   {ccyFormat(invoiceTotal)}
                 </StyledTableCell>
-              </StyledTableRow>
+              </StyledTableRow> */}
             </TableBody>
           </Table>
         </TableContainer>

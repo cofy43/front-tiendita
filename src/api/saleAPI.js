@@ -42,8 +42,8 @@ export async function updateSale(updatedSale) {
         data: updatedSale,
     }    
     await axios(config)
-    .then(function (response) {
-        result = response.data;
+    .then(function (response) {        
+        result = response.status;
     })
     .catch(function (error) {
         result= false;
