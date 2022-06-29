@@ -1,37 +1,17 @@
 import * as React from "react";
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Fab from "@mui/material/Fab";
 import Modal from "@mui/material/Modal";
-import Container from "@mui/material/Container";
-import { styled } from "@mui/material/styles";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import Tooltip from '@mui/material/Tooltip';
 
 import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Cancel";
 
 /** Components */
-import TableSales from "./components/modal";
+import TableSales from "./components/Table";
+import ModalSale from "./components/Modal";
 
 import { getAllProductsI } from "../../api/productsAPI";
 import {
@@ -45,15 +25,6 @@ import "./ventas.css";
 
 import SweetAlert2 from "../../utils/sweetAlert/sweetAlertUtils";
 const moment = require("moment-timezone");
-
-const style = {
-  bgcolor: "#53ca98 ",
-  height: "85vh",
-  marginTop: "4rem",
-  width: "100%",
-  overflowY: "scroll",
-  borderRadius: "10px",
-};
 
 function Ventas() {
   const sweetAlert2 = new SweetAlert2();
@@ -92,16 +63,6 @@ function Ventas() {
     // eslint-disable-next-line
   }, [editedSaleId]);
 
-  const StyledTableTitle = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#D8D2CB",
-      color: theme.palette.common.black,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
-
   async function editSale(id) {
     let res = await findOne(id);
     if (res) {
@@ -135,7 +96,7 @@ function Ventas() {
       name: obj.name,
       items: 1,
       price: obj.sales_cost,
-      maxItems: obj.items-1
+      maxItems: obj.items - 1,
     };
   }
 
@@ -146,7 +107,7 @@ function Ventas() {
         "Ya se agregó previamente el articulo: " + item.name
       );
     } else {
-      let newItem = getTemplate(item);      
+      let newItem = getTemplate(item);
       let tempTotal = total;
       tempTotal += parseFloat(newItem.price);
       setTotal(tempTotal);
@@ -170,7 +131,7 @@ function Ventas() {
   function incrementProduct(id) {
     let tempList = toSaleList;
     tempList = tempList.map((element) => {
-      if (element.id === id && element.maxItems-1 >= 0) {
+      if (element.id === id && element.maxItems - 1 >= 0) {
         element.items += 1;
         element.maxItems -= 1;
       }
@@ -281,10 +242,7 @@ function Ventas() {
         </Grid>
       </Box>
 
-      <TableSales
-        salesList={salesList}
-        editSale={(id) => editSale(id)}
-      />
+      <TableSales salesList={salesList} editSale={(id) => editSale(id)} />
 
       <Modal
         open={open}
@@ -293,170 +251,18 @@ function Ventas() {
         aria-describedby="modal-modal-description"
         style={{ zIndex: "6" }}
       >
-        <Container>
-          <Box sx={style}>
-            <Grid
-              container
-              spacing={2}
-              columnSpacing={4}
-              justify="center"
-              minHeight={"80vh"}
-              direction={breakpoint ? "column" : "row"}
-            >
-              <Grid item xs={8}>
-                <div className="container" id="left-container">
-                  <Grid
-                    container
-                    direction="row"
-                    className="list-products"
-                    style={breakpoint ? { marginLeft: "7px" } : {}}
-                    justify="center"
-                  >
-                    {productList.map((elemt) => {
-                      return (
-                        <Grid item>
-                          <Card
-                            className={`card-item ${breakpoint ? 'card-mobile' : 'card-desktop'}`}                            
-                            onClick={handleClick(elemt)}
-                          >
-                            <CardMedia
-                              component="img"
-                              height="130"
-                              image={elemt.image}
-                              alt=""
-                            />
-                            <CardContent className="card-content">
-                              <Tooltip title={elemt.name} placement="top-start">
-                                <Typography
-                                  noWrap
-                                  gutterBottom
-                                  variant="h6"
-                                  component="div"
-                                  align="center"
-                                >
-                                  {elemt.name}
-                                </Typography>
-                              </Tooltip>
-                              <hr />
-                              <Typography
-                                variant="body2"
-                                color="black"
-                                textAlign={"center"}
-                              >
-                                $ {elemt.sales_cost} Inventario: {elemt.items}
-                              </Typography>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      );
-                    })}
-                  </Grid>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div className="container" id="right-container">
-                  <p id="title">Venta</p>
-                  <hr />
-                  <div id="table-purchases-items">
-                    <TableContainer component={Paper}>
-                      <Table
-                        size="small"
-                        stickyHeader={true}
-                        aria-label="simple table"
-                      >
-                        <TableHead>
-                          <TableRow>
-                            <StyledTableTitle>Nombre</StyledTableTitle>
-                            <StyledTableTitle>Cantidad</StyledTableTitle>
-                            <StyledTableTitle>Precio</StyledTableTitle>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody
-                          style={{ overflowY: "scroll", maxHeight: "1rem" }}
-                        >
-                          {toSaleList.map((row) => (
-                            <TableRow
-                              key={row.id}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: 0,
-                                },
-                              }}
-                            >
-                              <TableCell align="left">
-                                <div className="cell-content">
-                                  <DeleteIcon
-                                    color="error"
-                                    className="icon"
-                                    onClick={() => removeProduct2Sale(row.id)}
-                                  />
-                                  {row.name}
-                                </div>
-                              </TableCell>
-                              <TableCell align="left">
-                                <div className="cell-content">
-                                  <RemoveCircleOutlineIcon
-                                    color="error"
-                                    className="icon"
-                                    onClick={() => decrementProduct(row.id)}
-                                  />
-                                  <span style={{ margin: "0 7px 0 7px" }}>
-                                    {row.items}
-                                  </span>
-                                  <AddCircleOutlineIcon
-                                    color="success"
-                                    className="icon"
-                                    onClick={() => incrementProduct(row.id)}
-                                  />
-                                </div>
-                              </TableCell>
-                              <TableCell align="left">
-                                <b>$ {row.price}</b>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </div>
-                  <hr />
-                  <div id="info-purchase">
-                    <b>Total:</b>{" "}
-                    <span className="leftInfo">
-                      <b>$ {total}</b>
-                    </span>
-                  </div>
-                </div>
-                <Stack
-                  direction="row"
-                  spacing={breakpoint ? 8 : 6}
-                  className="sections-options"
-                >
-                  <Button
-                    variant="contained"
-                    color="error"
-                    size="large"
-                    startIcon={<CancelIcon />}
-                    onClick={handleClose}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    disabled={!total}
-                    className="leftInfo"
-                    variant="contained"
-                    color="success"
-                    size="large"
-                    startIcon={<SaveIcon />}
-                    onClick={() => saveSale()}
-                  >
-                    GUARDAR
-                  </Button>
-                </Stack>
-              </Grid>
-            </Grid>
-          </Box>
-        </Container>
+        <ModalSale
+          breakpoint={breakpoint}
+          productList={productList}
+          handleClick={(element) => handleClick(element)}
+          toSaleList={toSaleList}
+          removeProduct2Sale={(id) => removeProduct2Sale(id)}
+          decrementProduct={(id) => decrementProduct(id)}
+          incrementProduct={(id) => incrementProduct(id)}
+          total={total}
+          handleClose={handleClose}
+          saveSale={() => saveSale()}
+        />
       </Modal>
     </div>
   );
