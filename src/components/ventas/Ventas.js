@@ -157,6 +157,7 @@ function Ventas() {
       name: obj.name,
       items: 1,
       price: obj.sales_cost,
+      maxItems: obj.items-1
     };
   }
 
@@ -191,8 +192,9 @@ function Ventas() {
   function incrementProduct(id) {
     let tempList = toSaleList;
     tempList = tempList.map((element) => {
-      if (element.id === id) {
+      if (element.id === id && element.maxItems-1 >= 0) {
         element.items += 1;
+        element.maxItems -= 1;
       }
       return element;
     });
@@ -207,6 +209,7 @@ function Ventas() {
       if (element.id === id) {
         if (element.items - 1 > 0) {
           element.items -= 1;
+          element.maxItems += 1;
         } else {
           removeItem = true;
         }
@@ -425,7 +428,7 @@ function Ventas() {
                                 color="black"
                                 textAlign={"center"}
                               >
-                                $ {elemt.sales_cost}
+                                $ {elemt.sales_cost} Inventario: {elemt.items}
                               </Typography>
                             </CardContent>
                           </Card>

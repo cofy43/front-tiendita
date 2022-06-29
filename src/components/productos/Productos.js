@@ -75,6 +75,7 @@ function Productos() {
   const [product, setProduct] = React.useState({
     name: "",
     image: "",
+    imageName: "",
     items: 0,
     fk_category_id: 1,
     purchase_cost: 0.0,
@@ -161,7 +162,9 @@ function Productos() {
     let base64String = await toBase64(file);
     setImage(base64String);
     let obj = product;
-    obj.image = base64String;
+    obj.image = base64String;    
+    const lastDot = file.name.lastIndexOf('.');
+    obj.imageName = file.name.substring(lastDot);
     setProduct(obj);
     setPreview(true);
   };
