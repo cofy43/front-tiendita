@@ -3,12 +3,12 @@
 }
 
 #right-container {
+    background-color: #B8E1D9;
     max-height: 555px;
-    background-color: white;
 }
 
 .container {
-    background-color: #8edcb9;
+    background-color: #B8E1D9;
     height: 100%;
     max-height: 600px;
     margin: 10px;
@@ -27,7 +27,17 @@
     width: 100%;
 }
 
-#title {
+#title-div {
+    align-items: center;
+    display: flex;
+    flex-wrap: nowrap;
+    margin-left: calc(50% - 2.2rem);
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#title {   
+    margin-left: .5rem; 
     text-align: center;
     font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
@@ -50,12 +60,13 @@
 }
 
 #info-purchase {
-    background-color: #dcdcdc;
+    background-color: #F0F0F8;
     border-radius: 10px;
     padding: .8rem .7rem 0.9rem 0.7rem;
+    font-weight: bold;
 }
 
-.leftInfo {
+.rigthInfo {
     float: right;
     margin-right: .7rem;
 }
@@ -74,7 +85,7 @@
 .card-item {
     height: 90%;
     cursor: pointer;
-    max-width: 145px;
+    width: 145px;
 }
 
 .card-mobile {
@@ -91,10 +102,20 @@
 }
 
 .box-container {
-    background-color: #53ca98;
+    background-color: #5EBAA6;
     height: 85vh;
     margin-top: 4rem;
     width: 100%;
     overflow-y: scroll;
     border-radius: 10px;
+}
+
+.close-modal {
+    float: right;
+    padding-right: 10px;
+    padding-top: 10px;
+}
+
+.modal-body {
+    padding-top: 0px !important;
 }

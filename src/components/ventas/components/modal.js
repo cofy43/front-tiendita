@@ -24,11 +24,13 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function ModalSale(props) {
   const StyledTableTitle = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#D8D2CB",
+      backgroundColor: "#F0F0F8",
       color: theme.palette.common.black,
     },
     [`&.${tableCellClasses.body}`]: {
@@ -39,15 +41,16 @@ export default function ModalSale(props) {
   return (
     <Container>
       <Box className="box-container">
+      <div className="close-modal"><CloseIcon/></div>
         <Grid
           container
           spacing={2}
           columnSpacing={4}
           justify="center"
           minHeight={"80vh"}
-          direction={props.breakpoint ? "column" : "row"}
+          direction={props.breakpoint ? "column" : "row"}          
         >
-          <Grid item xs={8}>
+          <Grid item className="modal-body" xs={8}>
             <div className="container" id="left-container">
               <Grid
                 container
@@ -85,11 +88,11 @@ export default function ModalSale(props) {
                           </Tooltip>
                           <hr />
                           <Typography
-                            variant="body2"
+                            variant="inherit"
                             color="black"
-                            textAlign={"center"}
+                            textAlign={"center"}                            
                           >
-                            $ {elemt.sales_cost} Inventario: {elemt.items}
+                            $ {elemt.sales_cost} <br/>Inventario: {elemt.items}
                           </Typography>
                         </CardContent>
                       </Card>
@@ -99,9 +102,11 @@ export default function ModalSale(props) {
               </Grid>
             </div>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item className="modal-body" xs={4}>
             <div className="container" id="right-container">
-              <p id="title">Venta</p>
+              <div id="title-div">
+                <LocalMallIcon color="primary"/> <span id="title"> Venta</span>                
+              </div>              
               <hr />
               <div id="table-purchases-items">
                 <TableContainer component={Paper}>
@@ -167,9 +172,9 @@ export default function ModalSale(props) {
               </div>
               <hr />
               <div id="info-purchase">
-                <b>Total:</b>{" "}
-                <span className="leftInfo">
-                  <b>$ {props.total}</b>
+                <span>Total:</span>
+                <span className="rigthInfo">
+                  $ {props.total}
                 </span>
               </div>
             </div>
