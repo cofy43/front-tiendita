@@ -21,6 +21,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import Tooltip from '@mui/material/Tooltip';
 
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -28,8 +29,9 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
-import InfoIcon from "@mui/icons-material/Info";
-import EditIcon from "@mui/icons-material/Edit";
+
+/** Components */
+import TableSales from "./components/modal";
 
 import { getAllProductsI } from "../../api/productsAPI";
 import {
@@ -90,17 +92,6 @@ function Ventas() {
     // eslint-disable-next-line
   }, [editedSaleId]);
 
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#e28000",
-      color: theme.palette.common.white,
-      padding: "0px",
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
-
   const StyledTableTitle = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: "#D8D2CB",
@@ -108,19 +99,6 @@ function Ventas() {
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
-    },
-  }));
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-      backgroundColor: "#ffc340",
-    },
-    "&:nth-of-type(even)": {
-      backgroundColor: "#ffed6b",
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-      border: 0,
     },
   }));
 
@@ -168,7 +146,7 @@ function Ventas() {
         "Ya se agregó previamente el articulo: " + item.name
       );
     } else {
-      let newItem = getTemplate(item);
+      let newItem = getTemplate(item);      
       let tempTotal = total;
       tempTotal += parseFloat(newItem.price);
       setTotal(tempTotal);
@@ -303,67 +281,10 @@ function Ventas() {
         </Grid>
       </Box>
 
-      <Paper sx={{ width: "100%" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table
-            stickyHeader
-            sx={{ minWidth: 100 }}
-            aria-label="spanning table"
-          >
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="center">Venta</StyledTableCell>
-                <StyledTableCell align="center">Fecha</StyledTableCell>
-                <StyledTableCell align="center">Monto</StyledTableCell>
-                <StyledTableCell align="center">Acciones</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {salesList.map((row, indx) => (
-                <StyledTableRow key={indx}>
-                  <StyledTableCell align="center">
-                    {"Id de venta:" + row.id}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{row.date}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    $ {row.total}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <InfoIcon className="icon" />
-                    <EditIcon
-                      className="icon"
-                      onClick={() => editSale(row.id)}
-                    />
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-
-              {/* <StyledTableRow>
-                <StyledTableCell rowSpan={3} />
-                <StyledTableCell colSpan={2}>Subtotal</StyledTableCell>
-                <StyledTableCell align="right">
-                  {ccyFormat(invoiceSubtotal)}
-                </StyledTableCell>
-              </StyledTableRow>
-              <StyledTableRow>
-                <StyledTableCell>Tax</StyledTableCell>
-                <StyledTableCell align="right">{`${(TAX_RATE * 100).toFixed(
-                  0
-                )} %`}</StyledTableCell>
-                <StyledTableCell align="right">
-                  {ccyFormat(invoiceTaxes)}
-                </StyledTableCell>
-              </StyledTableRow>
-              <StyledTableRow>
-                <StyledTableCell colSpan={2}>Total</StyledTableCell>
-                <StyledTableCell align="right">
-                  {ccyFormat(invoiceTotal)}
-                </StyledTableCell>
-              </StyledTableRow> */}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+      <TableSales
+        salesList={salesList}
+        editSale={(id) => editSale(id)}
+      />
 
       <Modal
         open={open}
@@ -395,33 +316,27 @@ function Ventas() {
                       return (
                         <Grid item>
                           <Card
-                            sx={
-                              breakpoint
-                                ? { height: "90%", maxWidth: 145, margin: 1.5 }
-                                : { height: "90%", maxWidth: 145, margin: 2 }
-                            }
+                            className={`card-item ${breakpoint ? 'card-mobile' : 'card-desktop'}`}                            
                             onClick={handleClick(elemt)}
                           >
                             <CardMedia
                               component="img"
                               height="130"
                               image={elemt.image}
-                              alt="green iguana"
+                              alt=""
                             />
-                            <CardContent
-                              style={{
-                                paddingTop: "0px",
-                                paddingBottom: "10px",
-                              }}
-                            >
-                              <Typography
-                                gutterBottom
-                                variant="h6"
-                                component="div"
-                                align="center"
-                              >
-                                {elemt.name}
-                              </Typography>
+                            <CardContent className="card-content">
+                              <Tooltip title={elemt.name} placement="top-start">
+                                <Typography
+                                  noWrap
+                                  gutterBottom
+                                  variant="h6"
+                                  component="div"
+                                  align="center"
+                                >
+                                  {elemt.name}
+                                </Typography>
+                              </Tooltip>
                               <hr />
                               <Typography
                                 variant="body2"
