@@ -11,7 +11,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 /** Components */
 import TableSales from "./components/TableSales";
-import ModalSale from "./components/Modal";
+import ModalSale from "./components/ModalSale";
 
 import { getAllProductsI } from "../../api/productsAPI";
 import {
