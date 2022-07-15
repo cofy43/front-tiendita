@@ -10,7 +10,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import AddIcon from "@mui/icons-material/Add";
 
 /** Components */
-import TableSales from "./components/Table";
+import TableSales from "./components/TableSales";
 import ModalSale from "./components/Modal";
 
 import { getAllProductsI } from "../../api/productsAPI";
